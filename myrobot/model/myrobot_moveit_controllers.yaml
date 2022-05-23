@@ -1,0 +1,21 @@
+controller_names:
+  - myrobot_arm_controller
+  - myrobot_gripper_controller
+
+myrobot_arm_controller:
+  action_ns: follow_joint_trajectory
+  type: FollowJointTrajectory
+  default: true
+  joints:
+    - joint_base_1
+    - joint_1_2
+    - joint_2_3
+    - joint_3_4
+    - joint_4_gripper
+
+myrobot_gripper_controller:
+  action_ns: follow_joint_trajectory
+  type: FollowJointTrajectory
+  default: true
+  joints:
+    - joint_gripper_vacuum

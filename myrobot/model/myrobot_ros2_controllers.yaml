@@ -1,0 +1,36 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    myrobot_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    myrobot_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+myrobot_arm_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    joints:
+      - joint_base_1
+      - joint_1_2
+      - joint_2_3
+      - joint_3_4
+      - joint_4_gripper
+
+myrobot_gripper_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    joints: 
+      - joint_gripper_vacuum
