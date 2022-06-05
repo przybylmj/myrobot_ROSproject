@@ -36,7 +36,7 @@ def generate_launch_description():
                     get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),)
 
     #load model and config files
-    robot_description_config = xacro.process_file(os.path.join(get_package_share_directory("myrobot"),"model","robot_model.urdf",))
+    robot_description_config = xacro.process_file(os.path.join(get_package_share_directory("myrobot"),"model","robot_model.xacro",)) #robot_model.urdf
     robot_description = {"robot_description": robot_description_config.toxml()}
 
     robot_description_semantic_config = load_file("myrobot", "model/myrobot.srdf")
@@ -124,7 +124,7 @@ def generate_launch_description():
     load_controllers = []
     for controller in [
         "myrobot_arm_controller",
-        "myrobot_gripper_controller",
+        # "myrobot_gripper_controller",
         "joint_state_broadcaster",
     ]:
         load_controllers += [

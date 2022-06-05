@@ -1,46 +1,82 @@
-#include <geometry_msgs/msg/pose_stamped.hpp>
-#include <moveit/move_group_interface/move_group_interface.h>
-#include <rclcpp/rclcpp.hpp>
-#include <rclcpp/qos.hpp>
+#include "rclcpp/rclcpp.hpp"
+#include "example_interfaces/srv/add_two_ints.hpp"
+#include "std_srvs/srv/set_bool.hpp"
 
-const std::string MOVE_GROUP = "myrobot_arm";
+#include <chrono>
+#include <cstdlib>
+#include <memory>
+
+using namespace std::chrono_literals;
 
 class MyRobotControl : public rclcpp::Node
 {
     public:
-        MyRobotControl(): Node("myrobot_control"), move_group_(std::shared_ptr<rclcpp::Node>(std::move(this)),MOVE_GROUP)
+        MyRobotControl() : Node("myrobot_control")
         {
-            this->move_group_.setMaxAccelerationScalingFactor(1.0);
-            this->move_group_.setMaxVelocityScalingFactor(1.0);
-            target_pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/target_pose",rclcpp::QoS(1),std::bind(&MyRobotControl::myrobot_move,this,std::placeholders::_1));
-            RCLCPP_INFO(this->get_logger(),"Initialization successful");
-        } 
-        moveit::planning_interface::MoveGroupInterface move_group_;
-        rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr target_pose_sub_;
-        geometry_msgs::msg::Pose previous_pose;
+            grasping_cli_node  = rclcpp::Node::make_shared("grasping_cli_node");
+            grasping_cli = grasping_cli_node->create_client<std_srvs::srv::SetBool>("/robot_model/switch");
+            this->gripperOff();
+        }
+        std::shared_ptr<rclcpp::Node> grasping_cli_node;
+        rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr grasping_cli;
     private:
-        void myrobot_move(geometry_msgs::msg::PoseStamped::SharedPtr msg)     //const...
+        void gripperOn()
         {
-            if(msg->pose == previous_pose)
-            {
-                RCLCPP_INFO(this->get_logger(),"The same pose");
-                return;
+            auto request =std::make_shared<std_srvs::srv::SetBool::Request>();
+            request -> data = true;
+            while (!grasping_cli->wait_for_service(1s))
+            {   
+                if(!rclcpp::ok())
+                {
+                    RCLCPP_INFO(this->get_logger(),"Interrupted while waiting for the service. Exiting.");
+                    return;
+                }
+                RCLCPP_INFO(this->get_logger(),"service not available, waiting again...");
             }
-            RCLCPP_INFO(this->get_logger(),"Moving to new pose");
-            this->move_group_.setPoseTarget(msg->pose);
-            this->move_group_.move();
-            previous_pose=msg->pose;
+            auto future = grasping_cli->async_send_request(request);
+            if(rclcpp::spin_until_future_complete(grasping_cli_node,future) == rclcpp::FutureReturnCode::SUCCESS)
+            {
+                RCLCPP_INFO(this->get_logger(), "Gripper opened success: %ld", future.get()->success);
+            }
+            else
+            {
+                RCLCPP_ERROR(this->get_logger(), "Failed to call service to open robot gripper.");
+            }
+        }
+        void gripperOff()
+        {
+            auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+            request->data = false;
+            while (!grasping_cli->wait_for_service(1s))
+            {
+                if(!rclcpp::ok())
+                {
+                    RCLCPP_INFO(this->get_logger(),"Interrupted while waiting for the service. Exiting.");
+                    return;
+                }
+                RCLCPP_INFO(this->get_logger(),"service not available, waiting again...");
+            }
+            auto future = grasping_cli->async_send_request(request);
+            if(rclcpp::spin_until_future_complete(grasping_cli_node,future) == rclcpp::FutureReturnCode::SUCCESS)
+            {
+                RCLCPP_INFO(this->get_logger(),"Gripper closed success: %ld", future.get()->success);
+            }
+            else
+            {
+                RCLCPP_ERROR(this->get_logger(),"Failed to call service to close robot gripper.");
+            }
         }
 };
 
 
-int main(int argc, char *argv[])
+int main(int argc,char **argv)
 {
     rclcpp::init(argc,argv);
     auto myrobot_controller = std::make_shared<MyRobotControl>();
-    rclcpp::executors::SingleThreadedExecutor executor;
+    rclcpp::executors::MultiThreadedExecutor executor;
     executor.add_node(myrobot_controller);
     executor.spin();
     rclcpp::shutdown();
     return 0;
 }
+

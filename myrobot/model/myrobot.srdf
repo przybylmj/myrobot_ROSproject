@@ -10,19 +10,7 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="myrobot_arm">
-        <!-- <joint name="virtual_joint"/> -->
-        <joint name="joint_world_base"/>
-        <joint name="joint_base_1"/>
-        <joint name="joint_1_2"/>
-        <joint name="joint_2_3"/>
-        <joint name="joint_3_4"/>
-        <joint name="joint_4_gripper"/>
-        <joint name="joint_gripper_cameraHolder"/>
-        <joint name="joint_cameraHolder_camera"/>
-        <joint name="camera_optical_joint"/>
-    </group>
-    <group name="myrobot_gripper">
-        <link name="link_vacuum"/>
+        <chain base_link="world" tip_link="link_vacuum"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="home" group="myrobot_arm">
@@ -31,19 +19,20 @@
         <joint name="joint_3_4" value="0"/>
         <joint name="joint_4_gripper" value="0"/>
         <joint name="joint_base_1" value="0"/>
+        <joint name="joint_gripper_vacuum" value="0"/>
     </group_state>
-    <!-- <group_state name="basic_look" group="myrobot_arm">   -->
-    <group_state name="ready" group="myrobot_arm"> 
-        <joint name="joint_1_2" value="0.5856"/>
-        <joint name="joint_2_3" value="0.7182"/>
+    <group_state name="ready" group="myrobot_arm">
+        <joint name="joint_1_2" value="0.5414"/>
+        <joint name="joint_2_3" value="0.8729"/>
         <joint name="joint_3_4" value="0"/>
-        <joint name="joint_4_gripper" value="1.0497"/>
+        <joint name="joint_4_gripper" value="0.8287"/>
         <joint name="joint_base_1" value="0"/>
+        <joint name="joint_gripper_vacuum" value="0"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="vacuum_gripper" parent_link="link_gripper" group="myrobot_gripper" parent_group="myrobot_arm"/>
+    <end_effector name="link_vacuum" parent_link="link_gripper" group="myrobot_arm"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
-    <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="link_base"/>
+    <virtual_joint name="joint_world_base" type="fixed" parent_frame="world" child_link="link_base"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="link_1" link2="link_2" reason="Adjacent"/>
     <disable_collisions link1="link_1" link2="link_3" reason="Never"/>
@@ -74,7 +63,6 @@
     <disable_collisions link1="link_base" link2="link_camera" reason="Never"/>
     <disable_collisions link1="link_base" link2="link_cameraHolder" reason="Never"/>
     <disable_collisions link1="link_base" link2="link_gripper" reason="Never"/>
-    <disable_collisions link1="link_base" link2="link_vacuum" reason="Never"/>
     <disable_collisions link1="link_camera" link2="link_cameraHolder" reason="Adjacent"/>
     <disable_collisions link1="link_camera" link2="link_gripper" reason="Never"/>
     <disable_collisions link1="link_camera" link2="link_vacuum" reason="Never"/>

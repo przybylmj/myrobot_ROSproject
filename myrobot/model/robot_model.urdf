@@ -199,14 +199,14 @@
     <visual>
       <origin xyz="0.0 0.0 0.0"/>
       <geometry>
-        <box size="0.02 0.04 0.04"/>
+        <box size="0.02 0.07 0.04"/>
       </geometry>
       <material name="red"/>
     </visual>
     <collision>
       <origin xyz="0.0 0.0 0.0"/>
       <geometry>
-        <box size="0.02 0.04 0.04"/>
+        <box size="0.02 0.07 0.04"/>
       </geometry>
     </collision>
     <inertial>
@@ -314,15 +314,6 @@
     <limit effort="1000.0" lower="-2.0" upper="2.0" velocity="5.0"/>
     <dynamics damping="0.7" friction="0.7"/>
   </joint>
-  <!--joint and link for camera-->
-  <joint name="camera_optical_joint" type="fixed">
-    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
-    <!-- <origin xyz="0 0.1 0" rpy="0 ${-pi/2} 0"/> -->
-    <parent link="link_camera"/>
-    <child link="camera_link_optical"/>
-  </joint>
-  <link name="camera_link_optical">
-    </link>
   <!--ros2_control module-->
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
@@ -393,9 +384,10 @@
   </gazebo>
   <!--plugin for camera-->
   <gazebo reference="link_camera">
-    <sensor name="camera1" type="camera">
-      <update_rate>30.0</update_rate>
-      <camera name="head">
+    <!-- <gazebo>
+    <link name= "link_camera"> -->
+    <sensor name="sensor_name" type="multicamera">
+      <camera name="left">
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
           <width>800</width>
@@ -408,47 +400,44 @@
         </clip>
         <noise>
           <type>gaussian</type>
-          <!-- Noise is sampled independently per pixel on each frame.
-            That pixel's noise value is added to each of its color
-            channels, which at that point lie in the range [0,1]. -->
           <mean>0.0</mean>
           <stddev>0.007</stddev>
         </noise>
       </camera>
-      <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
-        <cameraName>myrobot/camera1</cameraName>
-        <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_link_optical</frameName>
-        <!-- setting hackBaseline to anything but 0.0 will cause a misalignment
-          between the gazebo sensor image and the frame it is supposed to
-          be attached to -->
-        <hackBaseline>0.0</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-        <CxPrime>0</CxPrime>
-        <Cx>0.0</Cx>
-        <Cy>0.0</Cy>
-        <focalLength>0.0</focalLength>
+      <camera name="right">
+        <pose>0 -0.07 0 0 0 0</pose>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <!-- Set update_rate only sensor, not on plugin -->
+      <update_rate>1</update_rate>
+      <plugin filename="libgazebo_ros_camera.so" name="plugin_name">
+        <ros>
+          <namespace>custom_ns</namespace>
+          <!-- topics need to be prefixed with camera_name for remapping -->
+          <argument>custom_camera/left/image_raw:=custom_camera/left/custom_image</argument>
+          <argument>custom_camera/right/image_raw:=custom_camera/right/custom_image</argument>
+          <argument>custom_camera/left/camera_info:=custom_camera/left/custom_camera_info</argument>
+          <argument>custom_camera/right/camera_info:=custom_camera/right/custom_camera_info</argument>
+        </ros>
+        <camera_name>custom_camera</camera_name>
+        <frameName>left_camera_optical_frame</frameName>
       </plugin>
     </sensor>
   </gazebo>
-  <!--plugin for vacuum gripper-->
-  <!-- <gazebo>
-      <plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
-        <robotNamespace>/robot_model/link_vacuum</robotNamespace>
-        <bodyName>link_vacuum</bodyName>
-        <topicName>grasping</topicName>
-        <maxForce>50</maxForce>
-        <maxDistance>0.05</maxDistance>
-        <minDistance>0.01</minDistance>
-      </plugin>
-    </gazebo> -->
   <gazebo>
     <plugin filename="libgazebo_ros_vacuum_gripper.so" name="vacuum_gripper">
       <ros>

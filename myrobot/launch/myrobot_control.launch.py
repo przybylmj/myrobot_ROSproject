@@ -34,7 +34,7 @@ def load_yaml(package_name, file_path):
 def generate_launch_description():
     
     #load model and config files
-    robot_description_config = xacro.process_file(os.path.join(get_package_share_directory("myrobot"),"model","robot_model.urdf",))
+    robot_description_config = xacro.process_file(os.path.join(get_package_share_directory("myrobot"),"model","robot_model.xacro",)) #robot_model.urdf
     robot_description = {"robot_description": robot_description_config.toxml()}
 
     robot_description_semantic_config = load_file("myrobot", "model/myrobot.srdf")
@@ -44,9 +44,8 @@ def generate_launch_description():
     robot_description_kinematics = {"robot_description_kinematics": kinematics_yaml}
 
     myrobot_move_group = Node(
-        name="myrobot_control",
         package="myrobot",
-        executable="myrobot_control",
+        executable="myrobot_controller",
         output="screen",
         parameters=[robot_description,robot_description_semantic,kinematics_yaml]
     )

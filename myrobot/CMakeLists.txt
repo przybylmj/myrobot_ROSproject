@@ -22,7 +22,9 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
+find_package(example_interfaces REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -35,13 +37,13 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-add_executable(myrobot_control src/myrobot_control.cpp)
-target_include_directories(myrobot_control PUBLIC include)
-# ament_target_dependencies(myrobot_control ${THIS_PACKAGE_INCLUDE_DEPENDS} Boost)
-ament_target_dependencies(myrobot_control rclcpp geometry_msgs moveit_ros_planning_interface)
+add_executable(myrobot_controller src/myrobot_control.cpp)
+# target_include_directories(myrobot_control PUBLIC include)
+
+ament_target_dependencies(myrobot_controller rclcpp geometry_msgs std_srvs moveit_ros_planning_interface example_interfaces)
 
 install(
-  TARGETS myrobot_control
+  TARGETS myrobot_controller
   DESTINATION lib/${PROJECT_NAME}
 )
 

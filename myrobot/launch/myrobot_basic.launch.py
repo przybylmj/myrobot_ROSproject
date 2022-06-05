@@ -20,7 +20,7 @@ def generate_launch_description():
 
     xacro_file = os.path.join(myrobot_sim_path,
                               'model',
-                              'robot_model.urdf')
+                              'robot_model.xacro') #robot_model.urdf
 
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc)
