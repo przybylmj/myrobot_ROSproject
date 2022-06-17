@@ -8,6 +8,9 @@ controller_manager:
     myrobot_arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
+    # myrobot_gripper_controller:
+    #   type: joint_trajectory_controller/JointTrajectoryController
+
 myrobot_arm_controller:
   ros__parameters:
     command_interfaces:
@@ -22,3 +25,13 @@ myrobot_arm_controller:
       - joint_3_4
       - joint_4_gripper
       - joint_gripper_vacuum
+
+# myrobot_gripper_controller:
+#   ros__parameters:
+#     command_interfaces:
+#       - position
+#     state_interfaces:
+#       - position
+#       - velocity
+#     joints:
+#       - joint_gripper_vacuum

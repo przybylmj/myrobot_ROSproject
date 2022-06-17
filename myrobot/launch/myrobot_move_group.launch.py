@@ -63,9 +63,9 @@ def generate_launch_description():
     }
     trajectory_execution = {
         "moveit_manage_controllers": True,
-        "trajectory_execution.allowed_execution_duration_scaling": 1.2,
-        "trajectory_execution.allowed_goal_duration_margin": 0.5,
-        "trajectory_execution.allowed_start_tolerance": 0.01,
+        # "trajectory_execution.allowed_execution_duration_scaling": 1.2,
+        # "trajectory_execution.allowed_goal_duration_margin": 0.5,
+        # "trajectory_execution.allowed_start_tolerance": 0.01,
     }
     planning_scene_monitor_parameters = {
         "publish_planning_scene": True,
@@ -93,7 +93,7 @@ def generate_launch_description():
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        name="robot_state_publisher",
+        # name="robot_state_publisher",
         output="both",
         parameters=[robot_description],
     )
@@ -103,23 +103,15 @@ def generate_launch_description():
         "model",
         "myrobot_ros2_controllers.yaml",
     )
-    # ros2_control_node = Node(
-    #     package="controller_manager",
-    #     executable="ros2_control_node",
-    #     parameters=[robot_description, ros2_controllers_path],
-    #     output={
-    #         "stdout": "screen",
-    #         "stderr": "screen",
-    #     },
-    # )
-
-    # myrobot_move_group = Node(
-    #     name="myrobot_control",
-    #     package="myrobot",
-    #     executable="myrobot_control",
-    #     output="screen",
-    #     parameters=[robot_description,robot_description_semantic,kinematics_yaml]
-    # )
+    ros2_control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_description, ros2_controllers_path],
+        output={
+            "stdout": "screen",
+            "stderr": "screen",
+        },
+    )
 
     load_controllers = []
     for controller in [
@@ -140,6 +132,14 @@ def generate_launch_description():
                                    '-entity', 'myrobot'],
                         output='screen')
 
+    # static_tf = Node(
+    #     package="tf2_ros",
+    #     executable="static_transform_publisher",
+    #     name="static_transform_publisher",
+    #     output="both",
+    #     arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "link_base"],
+    # )
 
-    return LaunchDescription([gazebo,robot_state_publisher,run_move_group_node,spawn_entity] + load_controllers)
+
+    return LaunchDescription([gazebo,robot_state_publisher,run_move_group_node,ros2_control_node,spawn_entity] + load_controllers)
    

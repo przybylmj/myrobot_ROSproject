@@ -153,6 +153,8 @@ myrobot_arm:
     - LazyPRMstar
     - SPARS
     - SPARStwo
+  projection_evaluator: joints(joint_base_1,joint_1_2)
+  longest_valid_segment_fraction: 0.005
 myrobot_gripper:
   planner_configs:
     - AnytimePathShortening
