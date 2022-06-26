@@ -451,18 +451,18 @@
           <!-- Set update_rate only sensor, not on plugin -->
           <update_rate>1</update_rate>
 
-          <plugin name="plugin_name" filename="libgazebo_ros_camera.so">
+          <plugin name="cameras" filename="libgazebo_ros_camera.so">
             
             <ros>
-              <namespace>custom_ns</namespace>
+              <namespace>/robot_model</namespace>
               <!-- topics need to be prefixed with camera_name for remapping -->
-              <argument>custom_camera/left/image_raw:=custom_camera/left/custom_image</argument>
-              <argument>custom_camera/right/image_raw:=custom_camera/right/custom_image</argument>
-              <argument>custom_camera/left/camera_info:=custom_camera/left/custom_camera_info</argument>
-              <argument>custom_camera/right/camera_info:=custom_camera/right/custom_camera_info</argument>
+              <argument>custom_camera/left/image_raw:=camera/left/image</argument>
+              <argument>custom_camera/right/image_raw:=camera/right/image</argument>
+              <argument>custom_camera/left/camera_info:=camera/left/camera_info</argument>
+              <argument>custom_camera/right/camera_info:=camera/right/camera_info</argument>
             </ros>
 
-            <camera_name>custom_camera</camera_name>
+            <camera_name>stereocamera</camera_name>
 
             <frameName>left_camera_optical_frame</frameName>
           </plugin>
@@ -475,7 +475,9 @@
         <namespace>/robot_model</namespace>
       </ros>
       <link_name>link_vacuum</link_name>
-      <maxDistance>0.05</maxDistance>
+      <maxDistance>10.0</maxDistance>
+      <minDistance>0.1</minDistance>
+      <maxForce>40</maxForce>
     </plugin>
   </gazebo>
     

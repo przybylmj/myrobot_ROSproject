@@ -45,9 +45,7 @@ class MyRobotControl : public rclcpp::Node
                 RCLCPP_INFO(this->get_logger(),"Ready pose achieved.");
                 // geometry_msgs::msg::PoseStamped myrobot_pose = this->move_group.getCurrentPose();
                 // auto myrobot_pose = std::make_shared<geometry_msgs::msg::PoseStamped>(this->move_group.getCurrentPose("link_vacuum"));
-                // RCLCPP_INFO(this->get_logger(),"Current pose after made ready: %ld",myrobot_pose->pose.position.x,
-                //                                                                                 myrobot_pose->pose.position.y,
-                //                                                                                 myrobot_pose->pose.position.z);
+                // RCLCPP_INFO(this->get_logger(),"Current pose after made ready: %ld",myrobot_pose);
             }
         }
         void myrobot_move(geometry_msgs::msg::PoseStamped::SharedPtr msg)     //const...

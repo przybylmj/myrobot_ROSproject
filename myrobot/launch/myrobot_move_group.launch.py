@@ -3,6 +3,7 @@ import yaml
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import ExecuteProcess
+from launch.actions import DeclareLaunchArgument
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
@@ -34,6 +35,10 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),)
+
+    gazebo_world = DeclareLaunchArgument('world',
+                                            default_value=[os.path.join(get_package_share_directory("myrobot"),'model','myworld.world'),''],
+                                            description="Gazebo world to launch",)
 
     #load model and config files
     robot_description_config = xacro.process_file(os.path.join(get_package_share_directory("myrobot"),"model","robot_model.xacro",)) #robot_model.urdf
@@ -103,15 +108,15 @@ def generate_launch_description():
         "model",
         "myrobot_ros2_controllers.yaml",
     )
-    ros2_control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[robot_description, ros2_controllers_path],
-        output={
-            "stdout": "screen",
-            "stderr": "screen",
-        },
-    )
+    # ros2_control_node = Node(
+    #     package="controller_manager",
+    #     executable="ros2_control_node",
+    #     parameters=[robot_description, ros2_controllers_path],
+    #     output={
+    #         "stdout": "screen",
+    #         "stderr": "screen",
+    #     },
+    # )
 
     load_controllers = []
     for controller in [
@@ -141,5 +146,5 @@ def generate_launch_description():
     # )
 
 
-    return LaunchDescription([gazebo,robot_state_publisher,run_move_group_node,ros2_control_node,spawn_entity] + load_controllers)
+    return LaunchDescription([gazebo_world,gazebo,robot_state_publisher,run_move_group_node,spawn_entity] + load_controllers)
    
