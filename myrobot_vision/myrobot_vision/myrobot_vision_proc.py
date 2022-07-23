@@ -1,3 +1,4 @@
+from gettext import translation
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
@@ -6,15 +7,11 @@ from cv_bridge import CvBridge
 import cv2 as cv
 from matplotlib import pyplot as plt
 import numpy as np
+import math
 import torch
 import torchvision
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
-from geometry_msgs.msg import PoseStamped
-from geometry_msgs.msg import PointStamped
-from tf2_ros.buffer_interface import Duration, Time
-from tf2_ros.buffer_interface import BufferInterface
-
 
 
 class MyRobotVision(Node):
@@ -28,9 +25,7 @@ class MyRobotVision(Node):
         self.model = torch.load('/home/jan/ws_myrobot/src/myrobot_vision/dnn/model.pth')
         self.create_service(SetBool,"point_compute",self.pointCompute)
         self.tf_buffor = Buffer()
-        self.tf_buffInter = BufferInterface()
         self.tf_listener = TransformListener(self.tf_buffor,self)
-        self.tf_buffInterList = TransformListener(self.tf_buffInter,self)
         self.world_frame = "world"
         self.camera_frame = "link_vacuum"
 
@@ -39,6 +34,33 @@ class MyRobotVision(Node):
         
     def imgRcallback(self,msg):
         self.imgR = self.br.imgmsg_to_cv2(msg,desired_encoding = 'bgra8')
+
+    def cameraFrame2robotFrame(self,Pt_cameraFrame):
+        now = rclpy.time.Time()
+        trans = self.tf_buffor.lookup_transform(self.world_frame,self.camera_frame,now)
+        transl = trans.transform.translation
+        quat = trans.transform.rotation
+        t0 = +2.0 * (quat.w * quat.x + quat.y * quat.z)
+        t1 = +1.0 - 2.0 * (quat.x * quat.x + quat.y * quat.y)
+        alfa = math.atan2(t0, t1)
+        t2 = +2.0 * (quat.w * quat.y - quat.z * quat.x)
+        t2 = +1.0 if t2 > +1.0 else t2
+        t2 = -1.0 if t2 < -1.0 else t2
+        beta = math.asin(t2)
+        t3 = +2.0 * (quat.w * quat.z + quat.x * quat.y)
+        t4 = +1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z)
+        gamma = math.atan2(t3, t4)
+        T = np.array([[1,0,0,transl.x],[0,1,0,transl.y],[0,0,1,transl.z],[0,0,0,1]])
+        Rx = np.array([[1,0,0,0],[0,math.cos(alfa),-math.sin(alfa),0],[0,math.sin(alfa),math.cos(alfa),0],[0,0,0,1]])
+        Ry = np.array([[math.cos(beta),0,math.sin(beta),0],[0,1,0,0],[-math.sin(beta),0,math.cos(beta),0],[0,0,0,1]])
+        Rz = np.array([[math.cos(gamma),-math.sin(gamma),0,0],[math.sin(gamma),math.cos(gamma),0,0],[0,0,1,0],[0,0,0,1]])
+        M = T @ Rx @ Ry @ Rz
+        Pt_cameraFrame = np.append(Pt_cameraFrame,[1])
+        Pt_robotFrame = T @ Pt_cameraFrame
+        Pt_robotFrame = np.delete(Pt_robotFrame,3)
+        return Pt_robotFrame
+        
+
 
     def pointCompute(self,request,response):
         Q = np.array([[1,0,0,0],[0,1,0,0],[0,0,0,480],[0,0,-14.2857,0]])
@@ -68,10 +90,10 @@ class MyRobotVision(Node):
         p2 =output[0]['keypoints'][0][2]
         p3 =output[0]['keypoints'][0][3]
         p4 =output[0]['keypoints'][0][4]
-        graspPt_cameraCoor = img3d[int(p0[0])][int(p0[1])]
-        print(graspPt_cameraCoor[0])
-        print(graspPt_cameraCoor[1])
-        print(graspPt_cameraCoor[2])
+        graspPt_cameraFrame = img3d[int(p0[0])][int(p0[1])]
+        print(graspPt_cameraFrame[0])
+        print(graspPt_cameraFrame[1])
+        print(graspPt_cameraFrame[2])
         # self.imgL= cv.rectangle(self.imgL,(int(bbox[0].item()),int(bbox[1].item())),(int(bbox[2].item()),int(bbox[3].item())),(255,0,255),3)
         # self.imgL= cv.circle(self.imgL,(int(p0[0]),int(p0[1])),4,(255,255,255),5) #grasping point
         # self.imgL= cv.circle(self.imgL,(int(p1[0]),int(p1[1])),4,(255,255,0),5)
@@ -80,16 +102,8 @@ class MyRobotVision(Node):
         # self.imgL= cv.circle(self.imgL,(int(p4[0]),int(p4[1])),4,(255,255,0),5)
         # cv.imshow("DnnTest",self.imgL)
         # cv.waitKey(0)
-        graspPt_cameraFrame = PoseStamped()
-        graspPt_cameraFrame.header.frame_id = self.camera_frame
-        graspPt_cameraFrame.header.stamp = self.get_clock().now().to_msg()
-        graspPt_cameraFrame.pose.position.x = graspPt_cameraCoor[0]
-        graspPt_cameraFrame.pose.position.y = graspPt_cameraCoor[1]
-        graspPt_cameraFrame.pose.position.z = graspPt_cameraCoor[2]
-
+        graspPt_robotFrame = self.cameraFrame2robotFrame(graspPt_cameraFrame)
        
-
-        
         response.success = True
         return response
 
