@@ -27,7 +27,7 @@ class MyRobotVision(Node):
         self.tf_buffor = Buffer()
         self.tf_listener = TransformListener(self.tf_buffor,self)
         self.world_frame = "world"
-        self.camera_frame = "link_vacuum"
+        self.camera_frame = "link_camera"
 
     def imgLcallback(self,msg):
         self.imgL = self.br.imgmsg_to_cv2(msg,desired_encoding = 'bgra8')
@@ -103,6 +103,7 @@ class MyRobotVision(Node):
         # cv.imshow("DnnTest",self.imgL)
         # cv.waitKey(0)
         graspPt_robotFrame = self.cameraFrame2robotFrame(graspPt_cameraFrame)
+        print(graspPt_robotFrame)
        
         response.success = True
         return response
