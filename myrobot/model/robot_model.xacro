@@ -485,15 +485,115 @@
         </sensor>
     </gazebo>
 
+  <!-- vacuum gripper plugins -->
   <gazebo>
-    <plugin  name='vacuum_gripper' filename='libgazebo_ros_vacuum_gripper.so'>
+    <plugin  name='vacuum_gripper1' filename='libgazebo_ros_vacuum_gripper.so'>
       <ros>
-        <namespace>/robot_model</namespace>
+        <namespace>/robot_model1</namespace>
       </ros>
       <link_name>link_vacuum</link_name>
-      <maxDistance>10.0</maxDistance>
-      <minDistance>0.1</minDistance>
-      <maxForce>40</maxForce>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper2' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model2</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper3' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model3</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper4' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model4</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper5' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model5</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper6' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model6</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper7' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model7</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper8' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model8</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper9' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model9</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin  name='vacuum_gripper10' filename='libgazebo_ros_vacuum_gripper.so'>
+      <ros>
+        <namespace>/robot_model10</namespace>
+      </ros>
+      <link_name>link_vacuum</link_name>
+      <maxDistance>0.1</maxDistance>
+      <minDistance>0.01</minDistance>
+      <maxForce>50</maxForce>
     </plugin>
   </gazebo>
     
