@@ -1,0 +1,5 @@
+bool trigger
+---
+geometry_msgs/PoseStamped object_point
+int64 object_cat
+bool object_detected
