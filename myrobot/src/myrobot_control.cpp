@@ -4,6 +4,7 @@
 #include <std_srvs/srv/set_bool.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
+// #include <tf2/LinearMath/Quaternion.h>
 
 #include <chrono>
 #include <cstdlib>
@@ -32,6 +33,7 @@ class MyRobotControl : public rclcpp::Node
         rclcpp::Service<myrobot_interfaces::srv::SetTargetPose>::SharedPtr target_pose_serv;
         geometry_msgs::msg::Pose pose;
         geometry_msgs::msg::Pose previous_pose;
+        // tf2::Quaternion quat;
     private:
         void myrobot_make_ready()
         {
@@ -59,6 +61,7 @@ class MyRobotControl : public rclcpp::Node
             this->move_group.setNumPlanningAttempts(10);
             this->move_group.setPlannerId("RRT");
             // this->move_group.setGoalJointTolerance(0.1);
+            // quat.setRPY()
             pose.position.x = request->object_point_pose_x;
             pose.position.y = request->object_point_pose_y;
             pose.position.z = request->object_point_pose_z;
