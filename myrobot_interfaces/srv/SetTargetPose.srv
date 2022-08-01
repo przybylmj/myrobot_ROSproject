@@ -1,3 +1,10 @@
-geometry_msgs/PoseStamped target_pose
+# geometry_msgs/PoseStamped target_pose
+float64 object_point_pose_x
+float64 object_point_pose_y
+float64 object_point_pose_z
+float64 object_point_rot_x
+float64 object_point_rot_z
+float64 object_point_rot_y
+float64 object_point_rot_w
 ---
 bool success

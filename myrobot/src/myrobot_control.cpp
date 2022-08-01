@@ -22,14 +22,15 @@ class MyRobotControl : public rclcpp::Node
             //items for robot move commanding
             this->move_group.setMaxAccelerationScalingFactor(1.0);
             this->move_group.setMaxVelocityScalingFactor(1.0);
-            target_pose_sub = this->create_subscription<geometry_msgs::msg::PoseStamped>("/target_pose",rclcpp::QoS(1),std::bind(&MyRobotControl::myrobot_move,this,std::placeholders::_1));
-            // target_pose_serv = this->create_service<geometry_msgs::msg::PoseStamped>("/target_pose",&MyRobotControl::myrobot_move);
-            RCLCPP_INFO(this->get_logger(),"Initialization successful");
             this->myrobot_make_ready();
+            // target_pose_sub = this->create_subscription<geometry_msgs::msg::PoseStamped>("/target_pose",rclcpp::QoS(1),std::bind(&MyRobotControl::myrobot_move,this,std::placeholders::_1));
+            target_pose_serv = this->create_service<myrobot_interfaces::srv::SetTargetPose>("/target_pose",std::bind(&MyRobotControl::myrobot_move,this,std::placeholders::_1,std::placeholders::_2));
+            RCLCPP_INFO(this->get_logger(),"Initialization successful");
         }
         moveit::planning_interface::MoveGroupInterface move_group;
-        rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr target_pose_sub;
-        // rclcpp::Service<geometry_msgs::msg::PoseStamped>::SharedPtr target_pose_serv;
+        // rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr target_pose_sub;
+        rclcpp::Service<myrobot_interfaces::srv::SetTargetPose>::SharedPtr target_pose_serv;
+        geometry_msgs::msg::Pose pose;
         geometry_msgs::msg::Pose previous_pose;
     private:
         void myrobot_make_ready()
@@ -46,7 +47,8 @@ class MyRobotControl : public rclcpp::Node
                 // RCLCPP_INFO(this->get_logger(),"Current pose after made ready: %ld",myrobot_pose);
             }
         }
-        void myrobot_move(geometry_msgs::msg::PoseStamped::SharedPtr msg)     //const...
+        void myrobot_move(const std::shared_ptr<myrobot_interfaces::srv::SetTargetPose::Request> request,
+            std::shared_ptr<myrobot_interfaces::srv::SetTargetPose::Response> response)     //const...
         {
             RCLCPP_INFO(this->get_logger(),"Move group command received.");
             this->move_group.setMaxVelocityScalingFactor(0.1);
@@ -57,15 +59,23 @@ class MyRobotControl : public rclcpp::Node
             this->move_group.setNumPlanningAttempts(10);
             this->move_group.setPlannerId("RRT");
             // this->move_group.setGoalJointTolerance(0.1);
-            if(msg->pose == previous_pose)
+            pose.position.x = request->object_point_pose_x;
+            pose.position.y = request->object_point_pose_y;
+            pose.position.z = request->object_point_pose_z;
+            pose.orientation.x = request->object_point_rot_x;
+            pose.orientation.y = request->object_point_rot_y;
+            pose.orientation.z = request->object_point_rot_z;
+            pose.orientation.w = request->object_point_rot_w;
+            if(pose == previous_pose)
             {
                 RCLCPP_INFO(this->get_logger(),"The same pose");
                 return;
             }
             RCLCPP_INFO(this->get_logger(),"Moving to new pose");
-            this->move_group.setPoseTarget(msg->pose);
+            this->move_group.setPoseTarget(pose);
             this->move_group.move();
-            previous_pose=msg->pose;
+            previous_pose = pose;
+            response->success = true;
         }
 };
 

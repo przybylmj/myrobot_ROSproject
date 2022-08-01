@@ -43,6 +43,7 @@ add_executable(myrobot_controller src/myrobot_control.cpp)
 
 ament_target_dependencies(myrobot_controller rclcpp geometry_msgs std_srvs moveit_ros_planning_interface example_interfaces myrobot_interfaces)
 
+
 install(
   TARGETS myrobot_controller
   DESTINATION lib/${PROJECT_NAME}

@@ -23,10 +23,13 @@ find_package(ament_cmake REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
+rosidl_generate_interfaces(${PROJECT_NAME}#_srv
   "srv/GetObjectPoint.srv"
   "srv/SetTargetPose.srv"
+  # LIBRARY_NAME ${PROJECT_NAME}
 )
+
+ament_export_dependencies(rosidl_default_runtime)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

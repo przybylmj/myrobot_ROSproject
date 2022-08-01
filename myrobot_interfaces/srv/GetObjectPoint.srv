@@ -1,5 +1,12 @@
 bool trigger
 ---
-geometry_msgs/PoseStamped object_point
+# geometry_msgs/PoseStamped object_point
+float64 object_point_pose_x
+float64 object_point_pose_y
+float64 object_point_pose_z
+float64 object_point_rot_x
+float64 object_point_rot_z
+float64 object_point_rot_y
+float64 object_point_rot_w
 int64 object_cat
 bool object_detected
