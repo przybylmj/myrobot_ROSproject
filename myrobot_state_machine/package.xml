@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>myrobot_vision</name>
+  <name>myrobot_state_machine</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="przybyl@mj.com">jan</maintainer>
@@ -13,13 +13,9 @@
   <test_depend>python3-pytest</test_depend>
 
   <exec_depend>rclpy</exec_depend>
-  <exec_depend>sensor_msgs</exec_depend>
-  <exec_depend>cv_bridge</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>std_srvs</exec_depend>
-  <exec_depend>myrobot_interfaces</exec_depend>
-  <exec_depend>tf2_ros</exec_depend>
-
+  <exec_depend>simple_node</exec_depend>
+  <exec_depend>yasmin</exec_depend>
+  <exec_depend>yasmin_ros</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>

@@ -1,8 +1,6 @@
 from setuptools import setup
-import os
-from glob import glob
 
-package_name = 'myrobot_vision'
+package_name = 'myrobot_state_machine'
 
 setup(
     name=package_name,
@@ -12,7 +10,6 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'dnn'),glob('dnn/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -23,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'myrobot_vision = myrobot_vision.myrobot_vision_proc:main',
+            'myrobot_state_machine = myrobot_state_machine.myrobot_sm:main',
         ],
     },
 )

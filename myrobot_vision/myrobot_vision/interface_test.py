@@ -2,7 +2,6 @@ import rclpy
 from rclpy.node import Node
 from myrobot_interfaces.srv import SetTargetPose
 
-
 class InterfaceTest(Node):
     def __init__(self):
         super().__init__("interface_test_node")
