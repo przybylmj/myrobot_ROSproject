@@ -1,4 +1,3 @@
-from curses import flash
 import rclpy
 from simple_node import Node
 from yasmin import State
@@ -99,15 +98,54 @@ class AuxPose(ServiceState):
     def aux_pose_res(self,blackboard,response):
         return "pose_set"
 
+class DesPose(ServiceState):
+    def __init__(self):
+        super().__init__(Node("DesPoseState"),SetTargetPose,"/target_pose",self.des_pose_req,["pose_set"],self.des_pose_res)
+
+    def des_pose_req(self,blackboard):
+        print("DesPose State Processing")
+        pose = SetTargetPose.Request()
+        if blackboard.obj_point_info.object_cat == 1:
+            pose.object_point_pose_x = 0.0
+            pose.object_point_pose_y = 0.8
+            pose.object_point_pose_z = 0.4
+        if blackboard.obj_point_info.object_cat == 2:
+            pose.object_point_pose_x = 0.0
+            pose.object_point_pose_y = -0.8
+            pose.object_point_pose_z = 0.4
+        # pose.object_point_rot_x = 0.0
+        pose.object_point_rot_y = 0.682
+        # pose.object_point_rot_z = 0.0
+        pose.object_point_rot_w = 0.732
+        return pose
+
+    def des_pose_res(self,blackboard,response):
+        return "pose_set"
+
+class UngraspObject(ServiceState):
+    def __init__(self):
+        super().__init__(Node("UngraspObjectState"),SetBool,"robot_model1/switch",self.ungrasp_obj_req,["ungrasped"],self.ungrasp_obj_res)
+
+    def ungrasp_obj_req(self,blackboard):
+        print("UngraspObject State Processing")
+        item = SetBool.Request()
+        item.data = False
+        return item
+
+    def ungrasp_obj_res(self,blackboard,response):
+        return "ungrasped"
+
 class MyRobotStateMachine(Node):
     def __init__(self):
         super().__init__("state_machine_node")
         sm = StateMachine(outcomes=["finish"])
-        sm.add_state("STEREO_POSE  ",StereoPose(),transitions={"stereo_pose_set":"STEREO_COMPUTE"})
+        sm.add_state("STEREO_POSE",StereoPose(),transitions={"stereo_pose_set":"STEREO_COMPUTE"})
         sm.add_state("STEREO_COMPUTE",StereoCompute(),transitions={"point_got":"GRASP_POSE","no_objects":"finish"})
         sm.add_state("GRASP_POSE",GraspPose(),transitions={"pose_set":"GRASP_OBJ"})
         sm.add_state("GRASP_OBJ",GraspObject(),transitions={"grasped":"AUX_POSE"})
-        sm.add_state("AUX_POSE",AuxPose(),transitions={"pose_set":"finish"})
+        sm.add_state("AUX_POSE",AuxPose(),transitions={"pose_set":"DES_POSE"})
+        sm.add_state("DES_POSE",DesPose(),transitions={"pose_set":"UNGRASP_OBJ"})
+        sm.add_state("UNGRASP_OBJ",UngraspObject(),transitions={"ungrasped":"STEREO_POSE"})
         outcome = sm()
         print(outcome)
 
