@@ -9,7 +9,7 @@ from myrobot_interfaces.srv import GetObjectPoint
 
 class StereoPose(ServiceState):
     def __init__(self):
-        super().__init__(Node("StereoPoseSM"), SetTargetPose, '/target_pose', self.stereo_pose_req, ["pose_set"], self.stereo_pose_res)
+        super().__init__(Node("StereoPoseState"), SetTargetPose, '/target_pose', self.stereo_pose_req, ["pose_set"], self.stereo_pose_res)
     
     def stereo_pose_req(self,blackboard):
         pose = SetTargetPose.Request()
@@ -28,24 +28,25 @@ class StereoPose(ServiceState):
 
 class StereoCompute(ServiceState):
     def __init__(self):
-        super().__init__(Node('StereoComputeSM'), GetObjectPoint, '/point_compute', self.stereo_compute_req, ["point_got"], self.stereo_compute_res)
-
+        super().__init__(Node('StereoComputeState'), GetObjectPoint, '/point_compute', self.stereo_compute_req, ["point_got"], self.stereo_compute_res)
+    
     def stereo_compute_req(self,blackboard):
-        print(f"Info from stereo pose state: {blackboard.stereo_pose_success}")
-        trigger = GetObjectPoint.Request()
-        trigger = True
-        return trigger
+        print(f"Info from stereo pose state: {blackboard.stereo_pose_success}") 
+        data = GetObjectPoint.Request()
+        data.trigger = True
+        return data
 
     def stereo_compute_res(self,blackboard,response):
         blackboard.obj_point_info = response
+        print(response)
         return "point_got"
 
 class MyRobotStateMachine(Node):
     def __init__(self):
         super().__init__("state_machine_node")
         sm = StateMachine(outcomes=["finish"])
-        sm.add_state("StereoPose",StereoPose(),transitions={"pose_set":"StereoCompute"})
-        sm.add_state("StereoCompute",StereoCompute(),transitions={"point_got":"finish"})
+        sm.add_state("STEREO_POSE  ",StereoPose(),transitions={"pose_set":"STEREO_COMPUTE"})
+        sm.add_state("STEREO_COMPUTE",StereoCompute(),transitions={"point_got":"finish"})
 
         outcome = sm()
         print(outcome)
