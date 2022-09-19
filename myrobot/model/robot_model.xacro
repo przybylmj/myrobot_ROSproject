@@ -492,12 +492,11 @@
         <namespace>/robot_model1</namespace>
       </ros>
       <link_name>link_vacuum</link_name>
-      <maxDistance>0.1</maxDistance>
-      <minDistance>0.01</minDistance>
-      <maxForce>50</maxForce>
+      <max_distance>0.5</max_distance>
+      <fixed>ground_plane</fixed>
     </plugin>
   </gazebo>
-  <gazebo>
+  <!-- <gazebo>
     <plugin  name='vacuum_gripper2' filename='libgazebo_ros_vacuum_gripper.so'>
       <ros>
         <namespace>/robot_model2</namespace>
@@ -595,6 +594,6 @@
       <minDistance>0.01</minDistance>
       <maxForce>50</maxForce>
     </plugin>
-  </gazebo>
+  </gazebo> -->
     
 </robot>

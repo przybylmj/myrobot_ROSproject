@@ -23,9 +23,9 @@ class MoveitTestClass(Node):
     #     return self.future.result()
 
     def sendPose(self):
-        self.req.object_point_pose_x =0.9
-        self.req.object_point_pose_y = -0.07
-        self.req.object_point_pose_z = 0.7
+        self.req.object_point_pose_x = 0.8
+        self.req.object_point_pose_y = -0.15
+        self.req.object_point_pose_z = 0.8
         # self.req.object_point_rot_x = 0.0
         self.req.object_point_rot_y = 0.682
         # self.req.object_point_rot_z = 0.0
