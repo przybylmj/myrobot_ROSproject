@@ -86,7 +86,7 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
-    <model name='MyWorld'>
+    <!-- <model name='MyWorld'> -->
       <model name='CoffeeTable'>
         <link name='body'>
           <pose>0 0 0 0 -0 0</pose>
@@ -135,87 +135,87 @@
           <enable_wind>0</enable_wind>
           <kinematic>0</kinematic>
         </link>
-        <pose>0 0 0 0 -0 0</pose>
-      </model>
+        <!-- <pose>0 0 0 0 -0 0</pose>
+      </model> -->
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose>0.984483 -0.004817 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>1972 971000000</sim_time>
-      <real_time>1608 984092901</real_time>
-      <wall_time>1663596902 415993036</wall_time>
-      <iterations>1606002</iterations>
-      <model name='MyWorld'>
-        <pose>0.984474 -0.004807 -0.000121 0 -0 9e-06</pose>
-        <scale>1 1 1</scale>
+      <sim_time>2201 522000000</sim_time>
+      <real_time>228 989887212</real_time>
+      <wall_time>1663599149 898000916</wall_time>
+      <iterations>228551</iterations>
+      <!-- <model name='MyWorld'>
+        <pose>0.98447 -0.004805 -0.000141 0 -0 9e-06</pose>
+        <scale>1 1 1</scale> -->
         <model name='CoffeeTable'>
-          <pose>0.984474 -0.004807 -0.000121 0 -0 9e-06</pose>
+          <pose>0.98447 -0.004805 -0.000141 0 -0 9e-06</pose>
           <scale>1 1 1</scale>
           <link name='body'>
-            <pose>0.984474 -0.004807 -0.000121 0 -0 9e-06</pose>
+            <pose>0.98447 -0.004805 -0.000141 0 -0 9e-06</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>6.3e-05 1.8e-05 -0.01147 0.150916 -0.521623 -2e-06</acceleration>
-            <wrench>6.3e-05 1.8e-05 -0.01147 0 -0 0</wrench>
+            <acceleration>-1.5e-05 -5e-06 -9.82001 0.002626 0.001791 -2e-06</acceleration>
+            <wrench>-1.5e-05 -5e-06 -9.82001 0 -0 0</wrench>
           </link>
         </model>
-      </model>
-      <model name='MyWorld_0'>
-        <pose>0.797335 -0.153365 0.399861 -2.60524 1.54537 -0.970615</pose>
-        <scale>1 1 1</scale>
+      <!-- </model> -->
+      <!-- <model name='MyWorld_0'>
+        <pose>0.792288 -0.151446 0.399799 -2.60401 1.54516 -0.968675</pose>
+        <scale>1 1 1</scale> -->
         <model name='oats_box'>
-          <pose>0.797335 -0.153365 0.399861 -2.60524 1.54537 -0.970615</pose>
+          <pose>0.792288 -0.151446 0.399799 -2.60401 1.54516 -0.968675</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>0.797335 -0.153365 0.399861 -2.60524 1.54537 -0.970615</pose>
+            <pose>0.792288 -0.151446 0.399799 -2.60401 1.54516 -0.968675</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>0.060535 2.41107 18.1804 -0.860584 0.929198 0.002248</acceleration>
-            <wrench>6.1e-05 0.002411 0.01818 0 -0 0</wrench>
+            <acceleration>0.099697 -0.566959 0.886225 0.505578 1.44673 3.13019</acceleration>
+            <wrench>0.0001 -0.000567 0.000886 0 -0 0</wrench>
           </link>
         </model>
-      </model>
-      <model name='MyWorld_1'>
-        <pose>1.07292 -0.134842 0.385774 1.57091 -0.000203 1.60432</pose>
-        <scale>1 1 1</scale>
+      <!-- </model> -->
+      <!-- <model name='MyWorld_1'>
+        <pose>1.07487 -0.135776 0.385728 1.57063 -0.00031 1.59655</pose>
+        <scale>1 1 1</scale> -->
         <model name='tea_box'>
-          <pose>1.07292 -0.134842 0.385774 1.57091 -0.000203 1.60432</pose>
+          <pose>1.07487 -0.135776 0.385728 1.57063 -0.00031 1.59655</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>1.07292 -0.134842 0.385774 1.57091 -0.000203 1.60432</pose>
+            <pose>1.07487 -0.135776 0.385728 1.57063 -0.00031 1.59655</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>-0.273384 2.22977 10.8351 -0.594448 1.21477 -0.036374</acceleration>
-            <wrench>-0.000273 0.00223 0.010835 0 -0 0</wrench>
+            <acceleration>0.014704 0.00467 10.2074 -0.364818 1.17523 1.1e-05</acceleration>
+            <wrench>1.5e-05 5e-06 0.010207 0 -0 0</wrench>
           </link>
         </model>
-      </model>
-      <model name='MyWorld_2'>
-        <pose>0.879753 0.158775 0.396231 0 -0.098171 0.002828</pose>
-        <scale>1 1 1</scale>
+      <!-- </model> -->
+      <!-- <model name='MyWorld_2'>
+        <pose>0.87808 0.161671 0.396374 -0.000616 -0.098419 -0.004955</pose>
+        <scale>1 1 1</scale> -->
         <model name='crisps_can'>
-          <pose>0.879753 0.158775 0.396231 0 -0.098171 0.002828</pose>
+          <pose>0.87808 0.161671 0.396374 -0.000616 -0.098419 -0.004955</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>0.879753 0.158775 0.396231 0 -0.098171 0.002828</pose>
-            <velocity>-0.000266 -6e-05 -0.009636 0.000151 -0.0031 -0</velocity>
+            <pose>0.87808 0.161671 0.396374 -0.000616 -0.098419 -0.004955</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
             <acceleration>0 0 -9.8 0 -0 0</acceleration>
             <wrench>0 0 -0.0098 0 -0 0</wrench>
           </link>
         </model>
-      </model>
-      <model name='MyWorld_3'>
-        <pose>1.08552 0.14732 0.429211 -0.004214 -0.098193 -0.000186</pose>
-        <scale>1 1 1</scale>
+      <!-- </model> -->
+      <!-- <model name='MyWorld_3'>
+        <pose>1.08726 0.146746 0.429295 -0.00403 -0.092368 0.006564</pose>
+        <scale>1 1 1</scale> -->
         <model name='soup_can'>
-          <pose>1.08552 0.14732 0.429211 3.13382 -0.098193 -0.000186</pose>
+          <pose>1.08726 0.146746 0.429295 3.134 -0.092368 0.006564</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>1.08552 0.14732 0.429211 3.13382 -0.098193 -0.000186</pose>
-            <velocity>-0.000349 -0.000512 -0.010104 0.008055 -0.004756 0.001466</velocity>
-            <acceleration>0 0 -9.8 -0 -0 -0</acceleration>
-            <wrench>0 0 -0.0098 0 -0 0</wrench>
+            <pose>1.08726 0.146746 0.429295 3.134 -0.092368 0.006564</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>-1.121 0.083257 -0.246122 -0.220311 1.31691 6.4e-05</acceleration>
+            <wrench>-0.001121 8.3e-05 -0.000246 0 -0 0</wrench>
           </link>
         </model>
-      </model>
+      <!-- </model> -->
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -232,12 +232,12 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>2.3066 0.765851 0.765589 0 0.267641 -2.80383</pose>
+        <pose>0.640441 -1.14155 0.424161 0 0.291641 1.14336</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
-    <model name='MyWorld_0'>
+    <!-- <model name='MyWorld_0'> -->
       <model name='oats_box'>
         <link name='link'>
           <inertial>
@@ -299,13 +299,13 @@
           <enable_wind>0</enable_wind>
           <kinematic>0</kinematic>
         </link>
-        <pose>0 0 -0 0 -0 0</pose>
-      </model>
+        <!-- <pose>0 0 -0 0 -0 0</pose>
+      </model> -->
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose>0.81374 -0.161272 0.458616 0 -0 0</pose>
     </model>
-    <model name='MyWorld_1'>
+    <!-- <model name='MyWorld_1'> -->
       <model name='tea_box'>
         <link name='link'>
           <inertial>
@@ -367,13 +367,13 @@
           <enable_wind>0</enable_wind>
           <kinematic>0</kinematic>
         </link>
-        <pose>-0 0 0 0 -0 0</pose>
-      </model>
+        <!-- <pose>-0 0 0 0 -0 0</pose>
+      </model> -->
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose>1.09535 -0.132471 0.460001 0 -0 0</pose>
     </model>
-    <model name='MyWorld_2'>
+    <!-- <model name='MyWorld_2'> -->
       <model name='crisps_can'>
         <link name='link'>
           <inertial>
@@ -435,13 +435,13 @@
           <enable_wind>0</enable_wind>
           <kinematic>0</kinematic>
         </link>
-        <pose>0 0 -0 0 -0 0</pose>
-      </model>
+        <!-- <pose>0 0 -0 0 -0 0</pose>
+      </model> -->
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose>0.881459 0.140777 0.396811 0 -0 0</pose>
     </model>
-    <model name='MyWorld_3'>
+    <!-- <model name='MyWorld_3'> -->
       <model name='soup_can'>
         <link name='link'>
           <inertial>
@@ -503,8 +503,8 @@
           <enable_wind>0</enable_wind>
           <kinematic>0</kinematic>
         </link>
-        <pose>1e-06 0 0 3.13803 -0 0</pose>
-      </model>
+        <!-- <pose>1e-06 0 0 3.13803 -0 0</pose>
+      </model> -->
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose>1.09081 0.147208 0.424989 0 -0 0</pose>

@@ -10,10 +10,12 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="myrobot_arm">
-        <chain base_link="link_base" tip_link="link_vacuum"/>
+        <!-- <chain base_link="link_base" tip_link="link_vacuum"/> -->
+        <chain base_link="link_base" tip_link="link_tcp"/>
     </group>
     <group name="myrobot_gripper">
-        <link name="link_vacuum"/>
+        <!-- <link name="link_vacuum"/> -->
+        <link name="link_tcp"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="ready" group="myrobot_arm">
@@ -25,11 +27,13 @@
         <joint name="joint_gripper_vacuum" value="0.1215"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="vacuum_gripper" parent_link="link_gripper" group="myrobot_gripper"/>
+    <!-- <end_effector name="vacuum_gripper" parent_link="link_gripper" group="myrobot_gripper"/> -->
+    <end_effector name="vacuum_gripper" parent_link="link_vacuum" group="myrobot_gripper"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint_world" type="fixed" parent_frame="world_frame" child_link="world"/>
     <!-- PASSIVE JOINT -->
     <passive_joint name="joint_cameraHolder_camera"/>
+    <passive_joint name="joint_vacuum_tcp"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="link_1" link2="link_2" reason="Adjacent"/>
     <disable_collisions link1="link_1" link2="link_3" reason="Never"/>
@@ -67,4 +71,15 @@
     <disable_collisions link1="link_cameraHolder" link2="link_gripper" reason="Adjacent"/>
     <disable_collisions link1="link_cameraHolder" link2="link_vacuum" reason="Never"/>
     <disable_collisions link1="link_gripper" link2="link_vacuum" reason="Adjacent"/>
+    <!--added for tcp link-->
+    <disable_collisions link1="link_vacuum" link2="link_tcp" reason="Adjacent"/>
+    <disable_collisions link1="link_tcp" link2="link_1" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_2" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_3" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_4" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_base" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_camera" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_cameraHolder" reason="Never"/>
+    <disable_collisions link1="link_tcp" link2="link_gripper" reason="Never"/>
+    
 </robot>

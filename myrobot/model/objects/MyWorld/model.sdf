@@ -1,45 +1,60 @@
 <?xml version='1.0'?>
 <sdf version='1.7'>
   <model name='MyWorld'>
-    <model name='beer'>
+    <model name='Frying_pan'>
       <link name='link'>
-        <pose>0 0 0.115 0 -0 0</pose>
         <inertial>
-          <mass>0.39</mass>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>0.001</mass>
           <inertia>
-            <ixx>0.00058</ixx>
+            <ixx>1e-05</ixx>
             <ixy>0</ixy>
             <ixz>0</ixz>
-            <iyy>0.00058</iyy>
+            <iyy>1e-05</iyy>
             <iyz>0</iyz>
-            <izz>0.00019</izz>
+            <izz>1e-05</izz>
           </inertia>
         </inertial>
         <collision name='collision'>
+          <pose>0 0 0 0 -0 0</pose>
           <geometry>
-            <cylinder>
-              <radius>0.055</radius>
-              <length>0.23</length>
-            </cylinder>
+            <mesh>
+              <uri>pan.dae</uri>
+            </mesh>
           </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>1e+07</kp>
+                <kd>1</kd>
+                <min_depth>0</min_depth>
+                <max_vel>0.01</max_vel>
+              </ode>
+            </contact>
+          </surface>
         </collision>
         <visual name='visual'>
+          <pose>0 0 0 0 -0 0</pose>
           <geometry>
-            <cylinder>
-              <radius>0.055</radius>
-              <length>0.23</length>
-            </cylinder>
+            <mesh>
+              <uri>pan.dae</uri>
+            </mesh>
           </geometry>
           <material>
-            <script>
-              <uri>model://beer/materials/scripts</uri>
-              <uri>model://beer/materials/textures</uri>
-              <name>Beer/Diffuse</name>
-            </script>
+            <lighting>1</lighting>
+            <shader type='pixel'/>
           </material>
+          <transparency>0</transparency>
+          <cast_shadows>1</cast_shadows>
         </visual>
       </link>
-      <pose>-0 -0 0 0 -0 0</pose>
+      <pose>-4e-06 -0 0 -1.56799 0 0</pose>
     </model>
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
