@@ -1,3 +1,4 @@
+from turtle import shape
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
@@ -12,8 +13,15 @@ import torch
 import torchvision
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
+from scipy.spatial.transform import Rotation
 
-
+font                   = cv.FONT_HERSHEY_SIMPLEX
+bottomLeftCornerOfText = (10,30)
+fontScale              = 1
+fontColor              = (255,255,255)
+thickness              = 1
+lineType               = 2
+categ={1:'oats',2:'tea',3:'crisps',4:'soup',5:'scissors',6:'pan'}
 
 class MyRobotVision(Node):
     def __init__(self):
@@ -31,7 +39,9 @@ class MyRobotVision(Node):
         self.camera_frame = "link_camera"
         self.Q = np.array([[1,0,0,0],[0,1,0,0],[0,0,0,480],[0,0,-14.2857,0]])
         self.thres = 0.1
-        self.stereo = cv.StereoBM_create(numDisparities=16,blockSize=15)
+        # self.stereo = cv.StereoBM_create(numDisparities=16,blockSize=15)
+        # self.stereo = cv.StereoBM_create(numDisparities=16,blockSize=15)
+        self.stereo = cv. StereoSGBM_create(numDisparities=16,blockSize=3)
 
     def imgLcallback(self,msg):
         self.imgL = self.br.imgmsg_to_cv2(msg,desired_encoding = 'bgra8')
@@ -44,23 +54,27 @@ class MyRobotVision(Node):
         trans = self.tf_buffor.lookup_transform(self.world_frame,self.camera_frame,now)
         transl = trans.transform.translation
         quat = trans.transform.rotation
-        t0 = +2.0 * (quat.w * quat.x + quat.y * quat.z)
-        t1 = +1.0 - 2.0 * (quat.x * quat.x + quat.y * quat.y)
-        alfa = math.atan2(t0, t1)
-        t2 = +2.0 * (quat.w * quat.y - quat.z * quat.x)
-        t2 = +1.0 if t2 > +1.0 else t2
-        t2 = -1.0 if t2 < -1.0 else t2
-        beta = math.asin(t2)
-        t3 = +2.0 * (quat.w * quat.z + quat.x * quat.y)
-        t4 = +1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z)
-        gamma = math.atan2(t3, t4)
+        rot = Rotation.from_quat([quat.x,quat.y,quat.z,quat.w])
+        alfa, beta, gamma = rot.as_euler('XYZ',degrees=False)
+        # t0 = +2.0 * (quat.w * quat.x + quat.y * quat.z)
+        # t1 = +1.0 - 2.0 * (quat.x * quat.x + quat.y * quat.y)
+        # alfa = math.atan2(t0, t1)
+        # t2 = +2.0 * (quat.w * quat.y - quat.z * quat.x)
+        # t2 = +1.0 if t2 > +1.0 else t2
+        # t2 = -1.0 if t2 < -1.0 else t2
+        # beta = math.asin(t2)
+        # t3 = +2.0 * (quat.w * quat.z + quat.x * quat.y)
+        # t4 = +1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z)
+        # gamma = math.atan2(t3, t4)
+        print("Quat: ",[quat.x,quat.y,quat.z,quat.w])
+        print(f"Alfa, beta, gamma:  {alfa}  {beta}  {gamma}")
         T = np.array([[1,0,0,transl.x],[0,1,0,transl.y],[0,0,1,transl.z],[0,0,0,1]])
         Rx = np.array([[1,0,0,0],[0,math.cos(alfa),-math.sin(alfa),0],[0,math.sin(alfa),math.cos(alfa),0],[0,0,0,1]])
         Ry = np.array([[math.cos(beta),0,math.sin(beta),0],[0,1,0,0],[-math.sin(beta),0,math.cos(beta),0],[0,0,0,1]])
         Rz = np.array([[math.cos(gamma),-math.sin(gamma),0,0],[math.sin(gamma),math.cos(gamma),0,0],[0,0,1,0],[0,0,0,1]])
         M = T @ Rx @ Ry @ Rz
         Pt_cameraFrame = np.append(Pt_cameraFrame,[1])
-        Pt_robotFrame = T @ Pt_cameraFrame
+        Pt_robotFrame = M @ Pt_cameraFrame
         Pt_robotFrame = np.delete(Pt_robotFrame,3)
         return Pt_robotFrame
         
@@ -77,30 +91,25 @@ class MyRobotVision(Node):
         # plt.imshow(disparity,'gray')
         # plt.show()
         img3d = cv.reprojectImageTo3D(disparity,self.Q,handleMissingValues=True)
-        # for x in img3d:
-        #     for y in x:
-        #         if y[2] != 1.0000000e+04:
-        #             print(y)
+        ### TO DO ### get depth map from points cloud 
         imgTens = torchvision.transforms.functional.to_tensor(cv.cvtColor(self.imgL,cv.COLOR_BGRA2RGB))
+        imgTens = imgTens.to("cuda")
         with torch.no_grad():
             self.model.eval()
             output = self.model([imgTens])
         if output[0]['scores'][0] > self.thres:
-            response.object_detected = True 
-            bbox = output[0]['boxes'][0]
-            cat = output[0]['labels'][0]
-            p0 =output[0]['keypoints'][0][0]
-            p1 =output[0]['keypoints'][0][1]
-            p2 =output[0]['keypoints'][0][2]
-            p3 =output[0]['keypoints'][0][3]
-            p4 =output[0]['keypoints'][0][4]
-            graspPt_cameraFrame = img3d[int(p0[0])][int(p0[1])]
-            # self.imgL= cv.rectangle(self.imgL,(int(bbox[0].item()),int(bbox[1].item())),(int(bbox[2].item()),int(bbox[3].item())),(255,0,255),3)
-            # self.imgL= cv.circle(self.imgL,(int(p0[0]),int(p0[1])),4,(255,255,255),5) #grasping point
-            # self.imgL= cv.circle(self.imgL,(int(p1[0]),int(p1[1])),4,(255,255,0),5)
-            # self.imgL= cv.circle(self.imgL,(int(p2[0]),int(p2[1])),4,(255,255,0),5)
-            # self.imgL= cv.circle(self.imgL,(int(p3[0]),int(p3[1])),4,(255,255,0),5)
-            # self.imgL= cv.circle(self.imgL,(int(p4[0]),int(p4[1])),4,(255,255,0),5)
+            for idx in range(0,1):
+                response.object_detected = True 
+                bbox = output[0]['boxes'][idx]
+                cat = output[0]['labels'][idx]
+                p0 =output[0]['keypoints'][idx][0]
+            
+                graspPt_cameraFrame = img3d[int(p0[0])][int(p0[1])]
+                print("3D point value: ",graspPt_cameraFrame)
+                self.imgL= cv.rectangle(self.imgL,(int(bbox[0].item()),int(bbox[1].item())),(int(bbox[2].item()),int(bbox[3].item())),(255,0,255),3)
+                self.imgL= cv.circle(self.imgL,(int(p0[0]),int(p0[1])),4,(255,255,255),5) #grasping point
+                cv.putText(self.imgL,categ[int(cat.item())],(int(bbox[0].item())+40,int(bbox[1].item())) , font, fontScale,fontColor,thickness,lineType)
+
             # cv.imshow("DnnTest",self.imgL)
             # cv.waitKey(0)
             graspPt_robotFrame = self.cameraFrame2robotFrame(graspPt_cameraFrame)
