@@ -10,26 +10,41 @@ class MoveitTestClass(Node):
             self.get_logger().info('service not available, waiting again...')
         self.req = SetTargetPose.Request()
 
+    ### IMAGE CAPTURE POSE #############
     def sendPose(self):
-        self.req.object_point_pose_x = 0.7
-        self.req.object_point_pose_y = 0.05
-        self.req.object_point_pose_z = 0.7
+        self.req.object_point_pose_x = 1.0
+        self.req.object_point_pose_y = 0.07
+        self.req.object_point_pose_z = 0.95
 
-        self.req.object_point_rot_x = -0.044
-        self.req.object_point_rot_y = 0.498
-        self.req.object_point_rot_z = -0.075
-        self.req.object_point_rot_w = 0.863
+        self.req.object_point_rot_x = 0.0
+        self.req.object_point_rot_y = 0.423
+        self.req.object_point_rot_z = 0.0
+        self.req.object_point_rot_w = 0.906
         self.future = self.cli.call_async(self.req)
         rclpy.spin_until_future_complete(self,self.future)
         return self.future.result()
+
+    ### IMAGE CAPTURE POSE 01 #############
+    # def sendPose(self):
+    #     self.req.object_point_pose_x = 0.7
+    #     self.req.object_point_pose_y = 0.05
+    #     self.req.object_point_pose_z = 0.7
+
+    #     self.req.object_point_rot_x = -0.044
+    #     self.req.object_point_rot_y = 0.498
+    #     self.req.object_point_rot_z = -0.075
+    #     self.req.object_point_rot_w = 0.863
+    #     self.future = self.cli.call_async(self.req)
+    #     rclpy.spin_until_future_complete(self,self.future)
+    #     return self.future.result()
 
 
     ### BASIC POSE ###################
 
     # def sendPose(self):
     #     self.req.object_point_pose_x = 0.8
-    #     self.req.object_point_pose_y = -0.07
-    #     self.req.object_point_pose_z = 0.5
+    #     self.req.object_point_pose_y = -0.15
+    #     self.req.object_point_pose_z = 0.6
     #     # self.req.object_point_rot_x = 0.0
     #     self.req.object_point_rot_y = 0.682
     #     # self.req.object_point_rot_z = 0.0

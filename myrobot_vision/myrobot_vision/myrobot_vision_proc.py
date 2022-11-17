@@ -56,6 +56,14 @@ class MyRobotVision(Node):
         quat = trans.transform.rotation
         rot = Rotation.from_quat([quat.x,quat.y,quat.z,quat.w])
         alfa, beta, gamma = rot.as_euler('XYZ',degrees=False)
+        ### write camera pose to file
+        # with open("vision_test/camera_pose.txt",'w') as camera_pose_file:
+        #     camera_pose_file.write(f"transl (x,y,z):    {transl.x}  {transl.y}  {transl.z}")
+        #     camera_pose_file.write(f"rot (quat: x,y,z,w):   {quat.x}    {quat.y}    {quat.z}    {quat.w}")
+        #     camera_pose_file.close()
+        print(f"transl (x,y,z):    {transl.x}  {transl.y}  {transl.z}")
+        print(f"rot (quat: x,y,z,w):   {quat.x}    {quat.y}    {quat.z}    {quat.w}")
+
         # t0 = +2.0 * (quat.w * quat.x + quat.y * quat.z)
         # t1 = +1.0 - 2.0 * (quat.x * quat.x + quat.y * quat.y)
         # alfa = math.atan2(t0, t1)
@@ -82,8 +90,8 @@ class MyRobotVision(Node):
 
     def pointCompute(self,request,response):
         self.get_logger().info("Stereo method called")
-        # cv.imwrite("/home/jan/ws_myrobot/src/myrobot_vision/dnn/imgL.png",self.imgL)
-        # cv.imwrite("/home/jan/ws_myrobot/src/myrobot_vision/dnn/imgR.png",self.imgR)
+        cv.imwrite("/home/jan/ws_myrobot/src/myrobot_vision/myrobot_vision/vision_test/imgL.png",self.imgL)
+        cv.imwrite("/home/jan/ws_myrobot/src/myrobot_vision/myrobot_vision/vision_test/imgR.png",self.imgR)
         # cv.imshow("CameraRGray",cv.cvtColor(self.imgL,cv.COLOR_BGRA2GRAY))
         # cv.imshow("CameraRGray",self.imgL)
         # cv.waitKey(0)
@@ -91,6 +99,8 @@ class MyRobotVision(Node):
         # plt.imshow(disparity,'gray')
         # plt.show()
         img3d = cv.reprojectImageTo3D(disparity,self.Q,handleMissingValues=True)
+        img3d_array = np.array(img3d)
+        np.save("point_cloud_matrix.npy",img3d_array)
         ### TO DO ### get depth map from points cloud 
         imgTens = torchvision.transforms.functional.to_tensor(cv.cvtColor(self.imgL,cv.COLOR_BGRA2RGB))
         imgTens = imgTens.to("cuda")
@@ -103,6 +113,7 @@ class MyRobotVision(Node):
                 bbox = output[0]['boxes'][idx]
                 cat = output[0]['labels'][idx]
                 p0 =output[0]['keypoints'][idx][0]
+                print("grasping point CameraFrame:  ",p0)
             
                 graspPt_cameraFrame = img3d[int(p0[0])][int(p0[1])]
                 print("3D point value: ",graspPt_cameraFrame)
