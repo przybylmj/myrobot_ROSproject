@@ -12,14 +12,14 @@ class MoveitTestClass(Node):
 
     ### IMAGE CAPTURE POSE #############
     def sendPose(self):
-        self.req.object_point_pose_x = 1.0
-        self.req.object_point_pose_y = 0.07
-        self.req.object_point_pose_z = 0.95
+        self.req.object_point_pose_x = 1.2 #1.0
+        self.req.object_point_pose_y = 0.0 #0.07
+        self.req.object_point_pose_z = 0.7 #0.95
 
         self.req.object_point_rot_x = 0.0
-        self.req.object_point_rot_y = 0.423
+        self.req.object_point_rot_y = 0.500
         self.req.object_point_rot_z = 0.0
-        self.req.object_point_rot_w = 0.906
+        self.req.object_point_rot_w = 0.866
         self.future = self.cli.call_async(self.req)
         rclpy.spin_until_future_complete(self,self.future)
         return self.future.result()

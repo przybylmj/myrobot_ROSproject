@@ -277,7 +277,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='myrobot'>
+      <!-- <model name='myrobot'>
         <pose>0 -0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link_1'>
@@ -334,7 +334,7 @@
           <acceleration>3e-06 1e-06 -0 0 0 -6.8e-05</acceleration>
           <wrench>0 0 -0 0 -0 0</wrench>
         </link>
-      </model>
+      </model> -->
       <model name='oats_box'>
         <pose>1.33122 -0.069772 0.399793 -2.7042 1.54624 -1.18403</pose>
         <scale>1 1 1</scale>
@@ -1078,7 +1078,7 @@
       <allow_auto_disable>1</allow_auto_disable>
       <pose>0.517383 -0.689239 0 0 -0 0</pose>
     </model>
-    <model name='myrobot'>
+    <!-- <model name='myrobot'>
       <joint name='joint_world_base' type='fixed'>
         <pose relative_to='__model__'>0 0 0 0 -0 0</pose>
         <parent>world</parent>
@@ -1846,6 +1846,6 @@
         <max_distance>0.3</max_distance>
       </plugin>
       <pose>0 0 0 0 -0 0</pose>
-    </model>
+    </model> -->
   </world>
 </sdf>
