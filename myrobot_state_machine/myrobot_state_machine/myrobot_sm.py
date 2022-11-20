@@ -15,13 +15,15 @@ class StereoPose(ServiceState):
     def stereo_pose_req(self,blackboard):
         print("StereoPose State Processing")
         pose = SetTargetPose.Request()
-        pose.object_point_pose_x = 0.9
-        pose.object_point_pose_y = -0.07
+        ### transl
+        pose.object_point_pose_x = 1.2
+        pose.object_point_pose_y = 0.0 #-0.07
         pose.object_point_pose_z = 0.7
-        # pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.682
-        # pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.732
+        ### rotate
+        pose.object_point_rot_x = 0.0
+        pose.object_point_rot_y = 0.500
+        pose.object_point_rot_z = 0.0
+        pose.object_point_rot_w = 0.866
         return pose
 
     def stereo_pose_res(self,blackboard,response):
@@ -54,13 +56,15 @@ class GraspPose(ServiceState):
         print("GraspPose State Processing")
         # test grasping pose
         pose = SetTargetPose.Request()
-        pose.object_point_pose_x = 0.9
-        pose.object_point_pose_y = -0.07
-        pose.object_point_pose_z = 0.47
-        # pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.682
-        # pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.732
+        #### ???????????  #####
+        pose.object_point_pose_x = blackboard.obj_point_info.object_point_pose_x
+        pose.object_point_pose_y = blackboard.obj_point_info.object_point_pose_y
+        pose.object_point_pose_z = blackboard.obj_point_info.object_point_pose_z + 0.1 # safety offset
+        ### approaching gripper pose 87 degrees
+        pose.object_point_rot_x = 0.0
+        pose.object_point_rot_y = 0.688
+        pose.object_point_rot_z = 0.0
+        pose.object_point_rot_w = 0.725
         return pose
 
     def grasp_pose_res(self,blackboard,response):
@@ -73,7 +77,7 @@ class GraspObject(ServiceState):
     def grasp_object_req(self,blackboard):
         print("GraspObject State Processing")
         item = SetBool.Request()
-        item.data = True
+        item.data = False #!!!
         return item
 
     def grasp_object_res(self,blackboard,response):
@@ -86,13 +90,14 @@ class AuxPose(ServiceState):
     def aux_pose_req(self,blackboard):
         print("AuxPose State Processing")
         pose = SetTargetPose.Request()
-        pose.object_point_pose_x = 0.9
-        pose.object_point_pose_y = -0.07
-        pose.object_point_pose_z = 0.7
-        # pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.682
-        # pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.732
+        pose.object_point_pose_x = 1.0
+        pose.object_point_pose_y = 0.0 #-0.07
+        pose.object_point_pose_z = 0.95
+        ### rotate
+        pose.object_point_rot_x = 0.0
+        pose.object_point_rot_y = 0.688
+        pose.object_point_rot_z = 0.0
+        pose.object_point_rot_w = 0.725
         return pose
 
     def aux_pose_res(self,blackboard,response):
@@ -105,18 +110,34 @@ class DesPose(ServiceState):
     def des_pose_req(self,blackboard):
         print("DesPose State Processing")
         pose = SetTargetPose.Request()
-        if blackboard.obj_point_info.object_cat == 1:
-            pose.object_point_pose_x = 0.0
-            pose.object_point_pose_y = 0.8
-            pose.object_point_pose_z = 0.4
-        if blackboard.obj_point_info.object_cat == 2:
-            pose.object_point_pose_x = 0.0
+        if blackboard.obj_point_info.object_cat == 1: ### oats
+            pose.object_point_pose_x = 0.5
+            pose.object_point_pose_y = 0.7
+            pose.object_point_pose_z = 0.55
+        if blackboard.obj_point_info.object_cat == 2: ### tea
+            pose.object_point_pose_x = 0.5
+            pose.object_point_pose_y = -0.7
+            pose.object_point_pose_z = 0.55
+        if blackboard.obj_point_info.object_cat == 3: ### cookies
+            pose.object_point_pose_x = 0.2
             pose.object_point_pose_y = -0.8
-            pose.object_point_pose_z = 0.4
-        # pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.682
-        # pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.732
+            pose.object_point_pose_z = 0.55
+        if blackboard.obj_point_info.object_cat == 4: # soup
+            pose.object_point_pose_x = 0.2
+            pose.object_point_pose_y = -0.8
+            pose.object_point_pose_z = 0.55
+        if blackboard.obj_point_info.object_cat == 5: # scissors
+            pose.object_point_pose_x = -0.25
+            pose.object_point_pose_y = -0.8
+            pose.object_point_pose_z = 0.55
+        if blackboard.obj_point_info.object_cat == 6: # pan
+            pose.object_point_pose_x = -0.25
+            pose.object_point_pose_y = -0.8
+            pose.object_point_pose_z = 0.55
+        pose.object_point_rot_x = 0.0
+        pose.object_point_rot_y = 0.688
+        pose.object_point_rot_z = 0.0
+        pose.object_point_rot_w = 0.725
         return pose
 
     def des_pose_res(self,blackboard,response):
