@@ -37,7 +37,7 @@ def generate_launch_description():
                     get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),)
 
     gazebo_world = DeclareLaunchArgument('world',
-                                            default_value=[os.path.join(get_package_share_directory("myrobot"),'model','myworld.world'),''],
+                                            default_value=[os.path.join(get_package_share_directory("myrobot"),'model','myworld0.world'),''],
                                             description="Gazebo world to launch",)
 
     #load model and config files

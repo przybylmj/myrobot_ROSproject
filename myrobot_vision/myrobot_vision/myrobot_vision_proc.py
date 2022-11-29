@@ -80,7 +80,7 @@ class MyRobotVision(Node):
             self.model.eval()
             output = self.model([imgTensL])
         if output[0]['scores'][0] > self.thres:
-            for idx in range(0,6):
+            for idx in range(0,8):
                 bbox = output[0]['boxes'][idx].to("cpu")
                 cat = output[0]['labels'][idx].to("cpu")
                 p0 =output[0]['keypoints'][idx][0].to("cpu")
@@ -91,7 +91,7 @@ class MyRobotVision(Node):
             self.model.eval()
             output = self.model([imgTensR])
         if output[0]['scores'][0] > self.thres:
-            for idx in range(0,6):
+            for idx in range(0,8):
                 bbox = output[0]['boxes'][idx].to("cpu")
                 cat = output[0]['labels'][idx].to("cpu")
                 p0 =output[0]['keypoints'][idx][0].to("cpu")
@@ -99,8 +99,8 @@ class MyRobotVision(Node):
                 resR.append([p0,cat.item(),score.item()])
                
         ### sorting in relative to detection score   
-        resL = sorted(resL,key=lambda x: x[2],reverse=True)
-        resR = sorted(resR,key=lambda x: x[2],reverse=True)
+        # resL = sorted(resL,key=lambda x: x[2],reverse=True)
+        # resR = sorted(resR,key=lambda x: x[2],reverse=True)
         for itemL in resL:
             for itemR in resR:
                 if itemL[1] == itemR[1]:
@@ -122,6 +122,7 @@ class MyRobotVision(Node):
             P3D.append([Pt_robotFrame,item[2],item[3]]) ### 3dp (robot frame),cat,score
 
         if P3D:
+            P3D = sorted(P3D,key=lambda x: x[0][2],reverse=True) ### sorting results in respect to Z coor
             for p3d in P3D:
                 print(p3d)
             response.object_detected = True

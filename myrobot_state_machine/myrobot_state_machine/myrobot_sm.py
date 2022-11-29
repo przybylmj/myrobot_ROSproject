@@ -16,14 +16,23 @@ class StereoPose(ServiceState):
         print("StereoPose State Processing")
         pose = SetTargetPose.Request()
         ### transl
-        pose.object_point_pose_x = 1.2
-        pose.object_point_pose_y = 0.0 #-0.07
+        pose.object_point_pose_x = 0.7
+        pose.object_point_pose_y = 0.05 #-0.07
         pose.object_point_pose_z = 0.7
         ### rotate
-        pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.500
-        pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.866
+        pose.object_point_rot_x = -0.044
+        pose.object_point_rot_y = 0.498
+        pose.object_point_rot_z = -0.075
+        pose.object_point_rot_w = 0.863
+        # ### transl
+        # pose.object_point_pose_x = 1.2
+        # pose.object_point_pose_y = 0.0 #-0.07
+        # pose.object_point_pose_z = 0.7
+        # ### rotate
+        # pose.object_point_rot_x = 0.0
+        # pose.object_point_rot_y = 0.500
+        # pose.object_point_rot_z = 0.0
+        # pose.object_point_rot_w = 0.866
         return pose
 
     def stereo_pose_res(self,blackboard,response):
@@ -57,14 +66,17 @@ class GraspPose(ServiceState):
         # test grasping pose
         pose = SetTargetPose.Request()
         #### ???????????  #####
+        print(f"x:  {blackboard.obj_point_info.object_point_pose_x}")
+        print(f"y:  {blackboard.obj_point_info.object_point_pose_y}")
+        print(f"z:  {blackboard.obj_point_info.object_point_pose_z}")
         pose.object_point_pose_x = blackboard.obj_point_info.object_point_pose_x
         pose.object_point_pose_y = blackboard.obj_point_info.object_point_pose_y
         pose.object_point_pose_z = blackboard.obj_point_info.object_point_pose_z + 0.1 # safety offset
         ### approaching gripper pose 87 degrees
         pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.688
+        pose.object_point_rot_y = 0.682
         pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.725
+        pose.object_point_rot_w = 0.732
         return pose
 
     def grasp_pose_res(self,blackboard,response):
@@ -95,9 +107,9 @@ class AuxPose(ServiceState):
         pose.object_point_pose_z = 0.95
         ### rotate
         pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.688
+        pose.object_point_rot_y = 0.682
         pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.725
+        pose.object_point_rot_w = 0.732
         return pose
 
     def aux_pose_res(self,blackboard,response):
@@ -135,9 +147,9 @@ class DesPose(ServiceState):
             pose.object_point_pose_y = -0.8
             pose.object_point_pose_z = 0.55
         pose.object_point_rot_x = 0.0
-        pose.object_point_rot_y = 0.688
+        pose.object_point_rot_y = 0.682
         pose.object_point_rot_z = 0.0
-        pose.object_point_rot_w = 0.725
+        pose.object_point_rot_w = 0.732
         return pose
 
     def des_pose_res(self,blackboard,response):
@@ -162,10 +174,12 @@ class MyRobotStateMachine(Node):
         sm = StateMachine(outcomes=["finish"])
         sm.add_state("STEREO_POSE",StereoPose(),transitions={"stereo_pose_set":"STEREO_COMPUTE"})
         sm.add_state("STEREO_COMPUTE",StereoCompute(),transitions={"point_got":"GRASP_POSE","no_objects":"finish"})
-        sm.add_state("GRASP_POSE",GraspPose(),transitions={"pose_set":"GRASP_OBJ"})
+        # sm.add_state("GRASP_POSE",GraspPose(),transitions={"pose_set":"GRASP_OBJ"})
+        sm.add_state("GRASP_POSE",GraspPose(),transitions={"pose_set":"AUX_POSE"})
         sm.add_state("GRASP_OBJ",GraspObject(),transitions={"grasped":"AUX_POSE"})
         sm.add_state("AUX_POSE",AuxPose(),transitions={"pose_set":"DES_POSE"})
-        sm.add_state("DES_POSE",DesPose(),transitions={"pose_set":"UNGRASP_OBJ"})
+        # sm.add_state("DES_POSE",DesPose(),transitions={"pose_set":"UNGRASP_OBJ"})
+        sm.add_state("DES_POSE",DesPose(),transitions={"pose_set":"STEREO_POSE"})
         sm.add_state("UNGRASP_OBJ",UngraspObject(),transitions={"ungrasped":"STEREO_POSE"})
         outcome = sm()
         print(outcome)
