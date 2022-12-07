@@ -85,7 +85,7 @@ class MyRobotVision(Node):
                 cat = output[0]['labels'][idx].to("cpu")
                 p0 =output[0]['keypoints'][idx][0].to("cpu")
                 score = output[0]['scores'][idx].to("cpu")
-                resL.append([p0,cat.item(),score.item()])
+                resL.append([p0,cat.item(),score.item(),bbox])
         ### imgR
         with torch.no_grad():
             self.model.eval()
@@ -96,11 +96,12 @@ class MyRobotVision(Node):
                 cat = output[0]['labels'][idx].to("cpu")
                 p0 =output[0]['keypoints'][idx][0].to("cpu")
                 score = output[0]['scores'][idx].to("cpu")
-                resR.append([p0,cat.item(),score.item()])
+                resR.append([p0,cat.item(),score.item(),bbox])
                
         ### sorting in relative to detection score   
         # resL = sorted(resL,key=lambda x: x[2],reverse=True)
         # resR = sorted(resR,key=lambda x: x[2],reverse=True)
+
         for itemL in resL:
             for itemR in resR:
                 if itemL[1] == itemR[1]:
@@ -111,6 +112,22 @@ class MyRobotVision(Node):
                             alreadyIs = True
                     if not alreadyIs:
                         res.append([itemL[0],itemR[0],itemL[1],itemL[2]])
+                        ### vis res
+                        p0L = itemL[0]
+                        catL = itemL[1]
+                        bboxL = itemL[3]
+                        p0R = itemR[0]
+                        catR = itemR[1]
+                        bboxR = itemR[3]
+                        self.imgL= cv.rectangle(self.imgL,(int(bboxL[0].item()),int(bboxL[1].item())),(int(bboxL[2].item()),int(bboxL[3].item())),(255,0,255),3)
+                        self.imgL= cv.circle(self.imgL,(int(p0L[0]),int(p0L[1])),4,(255,255,255),5) #grasping point
+                        cv.putText(self.imgL,str(catL),(int(bboxL[0])+45,int(bboxL[1])) , font, fontScale,fontColor,thickness,lineType)
+                        self.imgR= cv.rectangle(self.imgR,(int(bboxR[0].item()),int(bboxR[1].item())),(int(bboxR[2].item()),int(bboxR[3].item())),(255,0,255),3)
+                        self.imgR= cv.circle(self.imgR,(int(p0R[0]),int(p0R[1])),4,(255,255,255),5) #grasping point
+                        cv.putText(self.imgR,str(catR),(int(bboxR[0])+45,int(bboxR[1])) , font, fontScale,fontColor,thickness,lineType)
+
+        cv.imwrite('/home/jan/ws_myrobot/src/myrobot_vision/stereoImgs/imgL_top.jpg',self.imgL)
+        cv.imwrite('/home/jan/ws_myrobot/src/myrobot_vision/stereoImgs/imgR_top.jpg',self.imgR)
 
         for item in res:
             ptL,ptR = item[0],item[1]

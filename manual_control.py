@@ -25,33 +25,45 @@ class MoveitTestClass(Node):
     #     return self.future.result()
 
     ### IMAGE CAPTURE POSE 01 #############
-    def sendPose(self):
-        self.req.object_point_pose_x = 0.7
-        self.req.object_point_pose_y = 0.05
-        self.req.object_point_pose_z = 0.7
+    # def sendPose(self):
+    #     self.req.object_point_pose_x = 0.7
+    #     self.req.object_point_pose_y = 0.05
+    #     self.req.object_point_pose_z = 0.7
 
-        self.req.object_point_rot_x = -0.044
-        self.req.object_point_rot_y = 0.498
-        self.req.object_point_rot_z = -0.075
-        self.req.object_point_rot_w = 0.863
-        self.future = self.cli.call_async(self.req)
-        rclpy.spin_until_future_complete(self,self.future)
-        return self.future.result()
+    #     self.req.object_point_rot_x = -0.044
+    #     self.req.object_point_rot_y = 0.498
+    #     self.req.object_point_rot_z = -0.075
+    #     self.req.object_point_rot_w = 0.863
+    #     self.future = self.cli.call_async(self.req)
+    #     rclpy.spin_until_future_complete(self,self.future)
+    #     return self.future.result()
 
 
     ### BASIC POSE ###################
 
     # def sendPose(self):
-        # self.req.object_point_pose_x = 1.2
-        # self.req.object_point_pose_y = 0.0
-        # self.req.object_point_pose_z = 0.5
-        # # self.req.object_point_rot_x = 0.0
-        # self.req.object_point_rot_y = 0.682
-        # # self.req.object_point_rot_z = 0.0
-        # self.req.object_point_rot_w = 0.732
-        # self.future = self.cli.call_async(self.req)
-        # rclpy.spin_until_future_complete(self,self.future)
-        # return self.future.result()
+    #     self.req.object_point_pose_x = 1.2
+    #     self.req.object_point_pose_y = 0.0
+    #     self.req.object_point_pose_z = 0.7
+    #     # self.req.object_point_rot_x = 0.0
+    #     self.req.object_point_rot_y = 0.682
+    #     # self.req.object_point_rot_z = 0.0
+    #     self.req.object_point_rot_w = 0.732
+    #     self.future = self.cli.call_async(self.req)
+    #     rclpy.spin_until_future_complete(self,self.future)
+    #     return self.future.result()
+
+    def sendPose(self):
+        self.req.object_point_pose_x = 0.9
+        self.req.object_point_pose_y = 0.0
+        self.req.object_point_pose_z = 0.8
+        # self.req.object_point_rot_x = 0.0
+        self.req.object_point_rot_y = 0.682
+        # self.req.object_point_rot_z = 0.0
+        self.req.object_point_rot_w = 0.732
+        self.future = self.cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future)
+        return self.future.result()
 
 def main(args=None):
     rclpy.init(args=args)
