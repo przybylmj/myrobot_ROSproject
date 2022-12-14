@@ -39,7 +39,7 @@ class MyRobotVision(Node):
         self.B = 0.07 # Baseline
         self.f = 476 # focal (in pixels)
         self.c = 400 # geometrical image center (the same for x and y axes)
-        self.thres = 0.45
+        self.thres = 0.5
 
     def imgLcallback(self,msg):
         self.imgL = self.br.imgmsg_to_cv2(msg,desired_encoding = 'bgra8')
@@ -79,8 +79,8 @@ class MyRobotVision(Node):
         with torch.no_grad():
             self.model.eval()
             output = self.model([imgTensL])
-        if output[0]['scores'][0] > self.thres:
-            for idx in range(0,len(output[0]['scores'])):
+        for idx in range(0,len(output[0]['scores'])):
+            if output[0]['scores'][idx] > self.thres:
                 bbox = output[0]['boxes'][idx].to("cpu")
                 cat = output[0]['labels'][idx].to("cpu")
                 p0 =output[0]['keypoints'][idx][0].to("cpu")
@@ -90,8 +90,8 @@ class MyRobotVision(Node):
         with torch.no_grad():
             self.model.eval()
             output = self.model([imgTensR])
-        if output[0]['scores'][0] > self.thres:
-            for idx in range(0,len(output[0]['scores'])):
+        for idx in range(0,len(output[0]['scores'])):
+            if output[0]['scores'][idx] > self.thres:
                 bbox = output[0]['boxes'][idx].to("cpu")
                 cat = output[0]['labels'][idx].to("cpu")
                 p0 =output[0]['keypoints'][idx][0].to("cpu")
